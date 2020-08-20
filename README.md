@@ -1,68 +1,11 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# AB Test Sample Size
 
-## Available Scripts
+A very simple website to host a calculator for a bayesian sample size estimate. This came about because we at Root switched from frequentist statistics to Bayesian statistics in order to gain many of the advantages that come with it for AB testing at a tech company. You can read more about why we use Bayesian statistics [here](https://github.com/bakermoran/BayesABTest/blob/master/docs/besyian_ab_testing/Bayesian_AB_Testing_explainer.md), but the gist of it is:
 
-In the project directory, you can run:
+1. It allows us to explain results better
+2. It allows us to avoid the goal of frequentist statistics, which is to avoid false positives
+3. It allows us to test faster, because of point 2. We can go with the result that we believe is _not worse_, because the decision is not high stakes.
 
-### `npm start`
+That is, it _would_ allow us to test fast, if we were not still using [this](https://www.evanmiller.org/ab-testing/sample-size.html) sample size calculator, backed by frequentist statistics. Working on a team that has very limited access to data volume, we _need_ to take advantage of this quality of Bayesian statistics. I therefore set out to make my own sample size calculator in order to justify a smaller sample size.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Hosted with Heroku at <https://ab-test-sample-size-frontend.herokuapp.com/>
