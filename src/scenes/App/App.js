@@ -2,11 +2,15 @@ import React from 'react';
 import './App.css';
 import '../CalculatorContainer/CalculatorContainer'
 import CalculatorContainer from '../CalculatorContainer/CalculatorContainer';
+import Navbar from 'react-bootstrap/Navbar';
+
 
 function App() {
   return (
     <div className="App">
-      <div className="App-header">Bayesian AB Test Sample Size Calculator</div>
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Brand >Bayesian AB Test Sample Size Calculator</Navbar.Brand>
+      </Navbar>
       <CalculatorContainer />
     </div>
   );

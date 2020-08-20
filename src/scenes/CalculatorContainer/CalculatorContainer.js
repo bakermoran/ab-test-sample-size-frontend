@@ -1,36 +1,32 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import LossValueExplainer from '../LossValueExplainer/LossValueExplainer'
+import Result from './components/Result'
+
+
 
 class CalculatorContainer extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        baseline_conversion_rate: 0.1,
-        expected_relative_lift: 0.2,
-        loss_tolerance: 0.02,
+        sample_size_returned: false,
         prior_alpha: 1,
         prior_beta: 1,
-        sample_size_returned: false
+        show_explainer: false,
+        results: [],
+        baseline_conversion_rate: '',
+        expected_relative_lift: '',
+        loss_tolerance: ''
       };
       this.handleChange = this.handleChange.bind(this);
+      this.handleExplainer = this.handleExplainer.bind(this);
       this.handleClick = this.handleClick.bind(this);
     }
-    componentDidMount() {
-      fetch('https://ab-test-sample-size-backend.herokuapp.com/api/v1/sample_size/?baseline_conversion_rate=.1&expected_relative_lift=.2', { credentials: 'same-origin' })
-        .then((response) => {
-          if (!response.ok) throw Error(response.statusText);
-          return response.json();
-      })
-        .then((data) => {
-          this.setState({
-            results: data,
-            loss_value: data.outputs.loss_value,
-            probability_B_over_A: data.outputs.probability_B_over_A,
-            sample_size_per_variant: data.outputs.sample_size_per_variant,
-          });
-          // history.pushState(this.state, 'index');
-        })
-        .catch(error => console.log(error)); // eslint-disable-line no-console
-    } // componentDidMount()
 
     handleChange(event) {
       this.setState({
@@ -53,89 +49,81 @@ class CalculatorContainer extends React.Component {
           return response.json();
       })
         .then((data) => {
-          this.setState({
-            results: data,
-            loss_value: data.outputs.loss_value,
-            probability_B_over_A: data.outputs.probability_B_over_A,
-            sample_size_per_variant: data.outputs.sample_size_per_variant,
-            sample_size_returned: true
-          });
+          this.setState(prevState => ({
+            sample_size_returned: true,
+            results: [data, ...prevState.results]
+          }))
           // history.pushState(this.state, 'index');
         })
         .catch(error => console.log(error)); // eslint-disable-line no-console
     } // handleClick()
 
-    showResults() {
-      return (
-        this.state.sample_size_returned ?
-      <div>
-        <p>loss value = {this.state.loss_value} </p>
-        <p>Probability B {">"} A = {this.state.probability_B_over_A}</p>
-        <p>sample size per variant = {this.state.sample_size_per_variant}</p>
-      </div> : <div></div>
-      )
-    }
+    handleExplainer(event) {
+      this.setState({show_explainer: !this.state.show_explainer});
+    } // handleExplainer()
 
     render() {
       // if (history.state
       //    && performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
       //   this.state = history.state;
       // }
-      let results = this.showResults()
-      return (
-        <div>
-          Required Parameters
-          <form>
-            <label>
-              Baseline Conversion Rate:
-              <input type="text"
-                value={this.state.baseline_conversion_rate}
-                name="baseline_conversion_rate"
-                onChange={this.handleChange} />
-            </label> <br></br>
-            <label>
-              Expected Relative Lift:
-              <input type="text"
-                value={this.state.expected_relative_lift}
-                name="expected_relative_lift"
-                onChange={this.handleChange}
-                />
-            </label>
-            <br></br>
-            <label>
-              Loss Tolerance:
-              <input type="text"
-                value={this.state.loss_tolerance}
-                name="loss_tolerance"
-                onChange={this.handleChange} />
-            </label>
-            <br></br>
-            <br></br>
+      let input_form = <Form>
+      <Row>
+        <Col>
+          <Jumbotron>
+            <h2>Required Parameters</h2>
+            <Form.Group>
+              <Form.Label>Baseline Conversion Rate</Form.Label>
+              <Form.Control type="text" name="baseline_conversion_rate" value={this.state.baseline_conversion_rate} onChange={this.handleChange} placeholder="Baseline Conversion Rate" />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Expected Relative Lift</Form.Label>
+              <Form.Control type="text" name="expected_relative_lift" value={this.state.expected_relative_lift} onChange={this.handleChange} placeholder="Expected Relative Lift" />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Loss Tolerance</Form.Label> <Button size='sm' variant="outline-info" onClick={this.handleExplainer}>What is this?</Button>
+              <Form.Control type="text" name="loss_tolerance" value={this.state.loss_tolerance} onChange={this.handleChange} placeholder="Loss Tolerance" />
+              <Form.Text className="text-muted">
+              </Form.Text>
+            </Form.Group>
+          </Jumbotron>
+          </Col>
+          <Col>
+          <Jumbotron>
+            <h2>Beta Prior Parameters</h2>
+            <h6>Defaults to uninformed prior</h6>
+            <Form.Group>
+              <Form.Label>Prior Alpha</Form.Label>
+              <Form.Control type="text" name="prior_alpha" value={this.state.prior_alpha} onChange={this.handleChange} placeholder="Prior Alpha" />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Prior Beta</Form.Label>
+              <Form.Control type="text" name="prior_beta" value={this.state.prior_beta} onChange={this.handleChange} placeholder="Prior Beta" />
+            </Form.Group>
+          </Jumbotron>
+          </Col>
+        </Row>
+      <Button variant="outline-primary"
+              type="submit"
+              onClick={this.handleClick}>
+        Submit
+      </Button>
+    </Form>
+    ;
 
-            Optional Parameters <br></br>
-            <label>
-              Prior Alpha Parameter:
-              <input type="text"
-                value={this.state.prior_alpha}
-                name="prior_alpha"
-                onChange={this.handleChange}
-                />
-            </label>
-            <br></br>
-            <label>
-              Prior Beta Parameter:
-              <input type="text"
-                value={this.state.prior_beta}
-                name="prior_beta"
-                onChange={this.handleChange}
-                />
-            </label>
-            <br></br>
-            <button type="submit" onClick={this.handleClick}>Submit</button>
-          </form>
-          <br></br>
-          {results}
-        </div>
+      return (
+        <Container>
+          {this.state.show_explainer ?
+            <Jumbotron>
+              <Button size='sm' variant="outline-info" onClick={this.handleExplainer}>Back</Button>
+              <LossValueExplainer />
+            </Jumbotron>
+            : <div>
+                {input_form}
+                {/* {this.state.results} */}
+                {this.state.results.map((data, i) => <Result key={i} results={data} timestamp={Date.now()}/> )}
+              </div>}
+        </Container>
       );
     } // render
   }
