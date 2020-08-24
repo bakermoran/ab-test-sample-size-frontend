@@ -5,10 +5,8 @@ import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import LossValueExplainer from '../LossValueExplainer/LossValueExplainer'
+import LossValueExplainer from './components/LossValueExplainer'
 import Result from './components/Result'
-
-
 
 class CalculatorContainer extends React.Component {
     constructor(props) {
@@ -21,7 +19,7 @@ class CalculatorContainer extends React.Component {
         results: [],
         baseline_conversion_rate: '',
         expected_relative_lift: '',
-        loss_tolerance: ''
+        loss_tolerance: 0.002
       };
       this.handleChange = this.handleChange.bind(this);
       this.handleExplainer = this.handleExplainer.bind(this);
